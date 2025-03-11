@@ -22,12 +22,12 @@ public class CreateProductHandler(IUnitOfWork unitOfWork,
         await _productWriteRepository.AddAsync(product);
         await _unitOfWork.CommitAsync();
 
-        await _productReadRepository.AddAsync(new ProductDto
-        (
-            Id: product.Id,
-            Name: product.Name,
-            Price: product.Price
-        ));
+        await _productReadRepository.AddAsync(new ProductDto 
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Price = product.Price
+        });
 
         return product.Id;
     }

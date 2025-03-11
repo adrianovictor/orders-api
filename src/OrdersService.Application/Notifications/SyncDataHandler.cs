@@ -15,6 +15,7 @@ public class SyncDataHandler(IServiceScopeFactory serviceScopeFactory) : INotifi
     {
         using (var scope = _scopeFactory.CreateScope())
         {
+            Console.WriteLine("Tentando sincronizar dados entre as bases");
             await SyncCustomersData(scope, cancellationToken);
         }
     }

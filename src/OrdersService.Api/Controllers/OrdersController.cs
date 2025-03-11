@@ -2,6 +2,7 @@ using Azure;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OrdersService.Application.Commands.Orders.CreateOrder;
+using OrdersService.Application.Commands.Orders.DeleteOrder;
 using OrdersService.Application.Commands.Orders.UpdateOrder;
 using OrdersService.Application.Queries.Orders.GetAll;
 using OrdersService.Application.Queries.Orders.GetByCustomerId;
@@ -88,6 +89,25 @@ namespace OrdersService.Api.Controllers
                     return NotFound();
 
                 return NoContent();
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseError), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                var result = await _mediator.Send(new DeleteOrderCommand
+                {
+                    OrderId = id,
+                });
+                return Ok(result);
             }
             catch (ApplicationException ex)
             {

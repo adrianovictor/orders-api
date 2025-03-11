@@ -14,15 +14,13 @@ public class SyncDataHostedService(IMediator mediator,
     private readonly IServiceScopeFactory _serviceProvider = serviceScopeFactory;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
+    {        
         while (!stoppingToken.IsCancellationRequested)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
-                // Obtém o mediator do escopo atual
                 var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-                // Publica a notificação
                 await mediator.Publish(new SyncDataNotification("Synchronizing data between SQL and MongoDB."), stoppingToken);
             }
 
