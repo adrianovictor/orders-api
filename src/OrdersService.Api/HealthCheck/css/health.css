@@ -1,0 +1,22 @@
+:root {
+    --bgMain: #ffffff; /* background color */
+    --fcBase: #000000; /* font color */
+    --bgMenuActive: #eeeeee; /* background color of active menu item */
+    --bcMenuActive: #3f2f9b; /* border color of active menu item */
+    --primaryColor: #4083ff; /* primary color */
+    --secondaryColor: #ffffff; /* secondary color */
+    --bgMenuActive: #000000; /* background color of menu item when active */
+    --bgButton: #ffffff; /* background color of button */    
+    --bgAside: var(--primaryColor); /* background color of aside */
+    --bgTable: #eeeeee; /* background color of table */
+    --bgTableSecondary: #ffffff; /* secondary background color of table */
+}
+
+td, thead, hc-checks-table__header {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.hc-button {
+    background-color: #69582D
+}

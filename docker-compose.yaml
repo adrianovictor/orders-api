@@ -1,0 +1,56 @@
+services:
+  mongodb:
+    image: mongo:latest
+    hostname: mongodb
+    environment:
+      - MONGODB_DATABASE=${DB_ORDERS_NAME}
+    networks:
+      - overlay
+    ports:
+      - 27017:27017
+
+  # sqlserver:
+  #   image: mcr.microsoft.com/mssql/server:2022-latest
+  #   container_name: sqlserver
+  #   environment:
+  #     - ACCEPT_EULA=Y
+  #     - SA_PASSWORD= ${SA_PASSWORD}  # Defina uma senha forte para o SA
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "echo 'SELECT 1' | /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P ${SA_PASSWORD} -C"]
+  #     start_period: 10s
+  #     retries: 5
+  #     interval: 5s
+  #     timeout: 3s      
+  #   ports:
+  #     - "1433:1433"
+  #   networks:
+  #     - overlay
+  #   volumes:
+  #     - sql_data:/var/opt/mssql
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '1'
+  #         memory: '2GB'
+
+  # api:
+  #   build:
+  #     context: ./src
+  #     dockerfile: Dockerfile
+  #   container_name: ordersservice
+  #   depends_on:
+  #     - mongodb
+  #     - sqlserver
+  #   ports:
+  #     - "5296:5000"
+  #   networks:
+  #    - overlay
+  #   entrypoint: ["dotnet", "OrdersService.Api.dll"]
+
+volumes:
+  esdata:
+  sql_data:
+
+networks:
+  overlay:
+    driver: bridge
