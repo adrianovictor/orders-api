@@ -18,7 +18,7 @@ public class Customer : Entity<Customer>
             throw new DomainException("Customer name cannot be empty.");
 
         if (string.IsNullOrWhiteSpace(email))
-            throw new DomainException("Customer email cannot be empty.");
+            throw new DomainException("Customer nome cannot be empty.");
             
         if (string.IsNullOrWhiteSpace(phone))
             throw new DomainException("Customer phone cannot be empty.");
@@ -41,7 +41,7 @@ public class Customer : Entity<Customer>
         Name = name;
     }
 
-    public void ChangeEmail(string email)
+    public void ChageEmail(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
             throw new DomainException("Customer email cannot be empty.");
