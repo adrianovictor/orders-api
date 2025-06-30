@@ -1,31 +1,39 @@
-name: IA Agente Code Reviewer com Gemini
+name: Code Review by Gemini AI
 
 on:
   pull_request:
-    types: [opened, synchronize]
-
-permissions:
-  pull-requests: write  # Permissão para a action comentar no PR (essencial)
 
 jobs:
   review:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: Gemini AI as a reviewer
-        # Ação popular e bem mantida para revisão de código com Gemini
-        uses: stefan-stanev/gemini-code-reviewer@v1.0.2
+      - name: Get PR diff
+        id: get_diff
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          git fetch origin ${{ github.event.pull_request.head.ref }}
+          git diff origin/${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.head.ref }} > diff.txt
+          echo "pull_request_diff<<EOF" >> $GITHUB_OUTPUT
+          cat diff.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Code Review by Gemini AI
+        uses: rubensflinco/gemini-code-review-action@1.0.5
         with:
-          # 1. Substitua o segredo da OpenAI pelo da Gemini
           gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
-
-          # 2. O token do GitHub continua sendo necessário
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-          # 3. Especifique o modelo do Gemini. 'gemini-1.5-flash' é rápido e eficiente.
-          model: 'gemini-1.5-flash-latest'
-
-          # 4. Parâmetros opcionais similares aos que você já usava
-          temperature: 0.2
-          max_tokens: 2048 # Opcional, a ação geralmente gerencia isso bem
+          github_repository: ${{ github.repository }}
+          github_pull_request_number: ${{ github.event.pull_request.number }}
+          git_commit_hash: ${{ github.event.pull_request.head.sha }}
+          model: "gemini-1.5-pro-latest"
+          pull_request_diff: ${{ steps.get_diff.outputs.pull_request_diff }}
+          pull_request_diff_chunk_size: "3500"
+          extra_prompt: |
+            Sempre responda em português brasileiro!
+          log_level: "DEBUG"
