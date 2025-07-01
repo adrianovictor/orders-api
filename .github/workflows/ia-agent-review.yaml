@@ -47,3 +47,10 @@ jobs:
             echo "🚨 Problema crítico detectado pelo Gemini. PR bloqueada."
             exit 1
           fi
+
+      - name: Handle Gemini errors
+        run: |
+          if grep -q "Erro ao acessar o Gemini" diff.txt; then
+            echo "::error title=Erro na revisão Gemini::Falha ao comunicar com a API Gemini. Verifique status e logs detalhados."
+            exit 1
+          fi          

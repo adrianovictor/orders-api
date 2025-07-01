@@ -2,11 +2,11 @@ namespace OrdersService.Domain.Exceptions;
 
 public static class ValidationExtensions
 {
-    public static void ThrowIfNullOrWhiteSpace(this string? value, string paramName, string? message = null)
+    public static void ThrowIfNullOrWhiteSpace(this string value, string parameterName, string message)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            throw new ArgumentException(paramName, message ?? $"O parâmetro '{paramName}' não pode ser nulo ou vazio.");
+            throw new ArgumentException(message, parameterName);
         }
     }
 
