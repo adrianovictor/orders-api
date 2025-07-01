@@ -35,15 +35,11 @@ jobs:
           pull_request_diff: ${{ steps.get_diff.outputs.pull_request_diff }}
           pull_request_diff_chunk_size: "3500"
           extra_prompt: |
-            Sempre responda em português brasileiro.
-            Separe os comentários por **arquivo**, informando o nome do arquivo como título (ex: `Arquivo: OrdersService.Domain.Entities.Customer.cs`).
+            Sempre responda em português brasileiro!
             Para cada comentário, siga o padrão:
-            - Linha(s): [linhas afetadas]
-            - Problema: [descrição]
-            - Severidade: [Alta, Média, Baixa]
-            - Sugestão: [como melhorar]
-
-            Se detectar **problemas críticos** (que podem causar falha de execução, bugs graves ou violação de princípios de arquitetura), sinalize claramente com a tag: `🚨 PROBLEMA CRÍTICO`.
+              - Severidade: [Alta, Média, Baixa]
+              - Sugestão: [como melhorar]
+          log_level: "DEBUG"
 
       - name: Fail if critical issue is found
         run: |
