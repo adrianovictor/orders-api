@@ -24,7 +24,7 @@ public class UpdateCustomerHandler(IUnitOfWork unitOfWork,
         }
 
         customerWrite.ChangeName(request.CustomerName);
-        customerWrite.ChangeEmail(Email.Create(request.CustomerEmail));
+        customerWrite.ChangeEmail(request.CustomerEmail);
         customerWrite.ChangePhone(request.CustomerPhone);
 
         _customerWriteRepository.Update(customerWrite);
@@ -37,7 +37,7 @@ public class UpdateCustomerHandler(IUnitOfWork unitOfWork,
             {
                 Id = customerWrite.Id,
                 Name = customerWrite.Name,
-                Email = customerWrite.Email.Address,
+                Email = customerWrite.Email,
                 Phone = customerWrite.Phone
             });
         }

@@ -6,7 +6,7 @@ public static class ValidationExtensions
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            throw new ArgumentNullException(paramName, message ?? $"O parâmetro '{paramName}' não pode ser nulo ou vazio.");
+            throw new ArgumentException(paramName, message ?? $"O parâmetro '{paramName}' não pode ser nulo ou vazio.");
         }
     }
 
@@ -30,7 +30,7 @@ public static class ValidationExtensions
     {
         if (value <= 0)
         {
-            throw new ArgumentOutOfRangeException(paramName, message ?? $"O parâmetro '{paramName}' deve ser maior que zero.");
+            throw new ArgumentException(paramName, message ?? $"O parâmetro '{paramName}' deve ser maior que zero.");
         }
     }
 
@@ -38,7 +38,7 @@ public static class ValidationExtensions
     {
         if (value < 0)
         {
-            throw new ArgumentOutOfRangeException(paramName, message ?? $"O parâmetro '{paramName}' não pode ser negativo.");
+            throw new ArgumentException(paramName, message ?? $"O parâmetro '{paramName}' não pode ser negativo.");
         }
     }            
 }

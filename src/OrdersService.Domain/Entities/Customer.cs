@@ -1,22 +1,26 @@
 using OrdersService.Domain.Core;
 using OrdersService.Domain.Exceptions;
-using OrdersService.Domain.ValueObjects;
+using OrdersService.Domain.Validators;
 
 namespace OrdersService.Domain.Entities;
 
 public class Customer : Entity<Customer>
 {
     public string Name { get; protected set; }
-    public Email Email { get; protected set; }
+    public string Email { get; protected set; }
     public string Phone { get; protected set; }
     public virtual ICollection<Order> Orders{ get; protected set; } = [];
 
     protected Customer() { }
 
-    public Customer(string name, Email email, string phone)
+    public Customer(string name, string email, string phone)
     {
         name.ThrowIfNullOrWhiteSpace(nameof(name), "O nome não pode ser vazio.");
-        email.ThrowIfNull(nameof(email), "Email não pode ser nulo.");
+        email.ThrowIfNullOrWhiteSpace(nameof(email), "O endereço de e-mail não pode ser vazio.");
+        if (!EmailValidator.Validate(email))
+        {
+            throw new ArgumentException("O endereço de e-mail fornecido não é válido.", nameof(email));
+        }        
         phone.ThrowIfNullOrWhiteSpace(nameof(phone), "O telefone não pode ser vazio.");
 
         Name = name;
@@ -24,7 +28,7 @@ public class Customer : Entity<Customer>
         Phone = phone;
     }
 
-    public static Customer Create(string name, Email email, string phone)
+    public static Customer Create(string name, string email, string phone)
     {
         return new(name, email, phone);
     }
@@ -36,11 +40,13 @@ public class Customer : Entity<Customer>
         Name = name;
     }
 
-    public void ChangeEmail(Email email)
+    public void ChangeEmail(string email)
     {
-        email.ThrowIfNull(nameof(email), "Email não pode ser nulo.");
-
-        Email = email;
+        email.ThrowIfNullOrWhiteSpace(nameof(email), "O endereço de e-mail não pode ser vazio.");
+        if (!EmailValidator.Validate(email))
+        {
+            throw new ArgumentException("O endereço de e-mail fornecido não é válido.", nameof(email));
+        } 
 
         Email = email;
     }
