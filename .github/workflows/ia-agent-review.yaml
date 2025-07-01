@@ -41,16 +41,27 @@ jobs:
               - Sugestão: [como melhorar]
           log_level: "DEBUG"
 
-      - name: Fail if critical issue is found
+      - name: Salvar resposta da Gemini
         run: |
-          if grep -q "🚨 PROBLEMA CRÍTICO" diff.txt; then
-            echo "🚨 Problema crítico detectado pelo Gemini. PR bloqueada."
-            exit 1
+          echo "${{ steps.gemini_review.outputs.gemini_log }}" > gemini_log.txt
+
+      - name: Simular estrutura JSON básica de erro (temporário até a action suportar JSON real)
+        run: |
+          if grep -q "🚨 PROBLEMA CRÍTICO" gemini_log.txt; then
+            echo '{ "status": "error", "severity": "critical", "message": "Problema crítico detectado pelo Gemini." }' > gemini-result.json
+          else
+            echo '{ "status": "ok" }' > gemini-result.json
           fi
 
-      - name: Handle Gemini errors
+      - name: Verificar problemas críticos
         run: |
-          if grep -q "Erro ao acessar o Gemini" diff.txt; then
-            echo "::error title=Erro na revisão Gemini::Falha ao comunicar com a API Gemini. Verifique status e logs detalhados."
+          STATUS=$(jq -r '.status' gemini-result.json)
+          MSG=$(jq -r '.message' gemini-result.json)
+
+          if [ "$STATUS" == "error" ]; then
+            echo "::error title=Erro do Gemini::$MSG"
             exit 1
-          fi          
+          else
+            echo "✅ Nenhum problema crítico detectado pelo Gemini."
+          fi
+       
