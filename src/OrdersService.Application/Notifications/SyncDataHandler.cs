@@ -34,7 +34,7 @@ public class SyncDataHandler(IServiceScopeFactory serviceScopeFactory) : INotifi
         var customerRead = await repositoryRead.GetAllAsync();
 
         var missingItems = !customerRead.Any() ? 
-            customersWrite.Select(_ => new CustomerDto { Id = _.Id, Name = _.Name, Email = _.Email, Phone = _.Phone }).ToList() :
+            customersWrite.Select(_ => new CustomerDto { Id = _.Id, Name = _.Name, Email = _.Email.Address, Phone = _.Phone }).ToList() :
             customerRead.Where(cr => !customersWrite.Any(cw => cw.Id == cr.Id))
             .ToList();
 

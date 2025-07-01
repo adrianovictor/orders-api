@@ -3,6 +3,7 @@ using OrdersService.Domain.Interfaces.Repository.Reading;
 using OrdersService.Domain.Interfaces.Repository.Writing;
 using OrdersService.Domain.Interfaces.UoW;
 using OrdersService.Domain.Models;
+using OrdersService.Domain.ValueObjects;
 
 namespace OrdersService.Application.Commands.Customers.UpdateCustomer;
 
@@ -23,8 +24,8 @@ public class UpdateCustomerHandler(IUnitOfWork unitOfWork,
         }
 
         customerWrite.ChangeName(request.CustomerName);
-        customerWrite.ChangeEmail(request.CustomerEmail);
-        customerWrite.ChanagePhone(request.CustomerPhone);
+        customerWrite.ChangeEmail(Email.Create(request.CustomerEmail));
+        customerWrite.ChangePhone(request.CustomerPhone);
 
         _customerWriteRepository.Update(customerWrite);
         await _unitOfWork.CommitAsync();
@@ -36,7 +37,7 @@ public class UpdateCustomerHandler(IUnitOfWork unitOfWork,
             {
                 Id = customerWrite.Id,
                 Name = customerWrite.Name,
-                Email = customerWrite.Email,
+                Email = customerWrite.Email.Address,
                 Phone = customerWrite.Phone
             });
         }

@@ -9,6 +9,6 @@ public class CustomerWriteRepository(OrdersDbContext context) : WriteRepository<
 {
     public async Task<Customer?> GetByEmailAsync(string email)
     {
-        return await _context.Customers.FirstOrDefaultAsync(_ => _.Email == email);
+        return await _context.Customers.FirstOrDefaultAsync(_ => _.Email.Address == email);
     }
 }

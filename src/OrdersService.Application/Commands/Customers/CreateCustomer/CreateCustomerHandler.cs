@@ -4,6 +4,7 @@ using OrdersService.Domain.Interfaces.Repository.Reading;
 using OrdersService.Domain.Interfaces.Repository.Writing;
 using OrdersService.Domain.Interfaces.UoW;
 using OrdersService.Domain.Entities;
+using OrdersService.Domain.ValueObjects;
 
 namespace OrdersService.Application.Commands.Customers.CreateCustomer;
 
@@ -23,7 +24,7 @@ public class CreateCustomerHandler(IUnitOfWork unitOfWork,
             throw new ApplicationException("E-mail is already registered.");
         }
 
-        customer = Customer.Create(request.Name, request.Email, request.Phone);
+        customer = Customer.Create(request.Name, Email.Create(request.Email), request.Phone);
 
         await _customerRepository.AddAsync(customer);
         await _unitOfWork.CommitAsync();
@@ -33,7 +34,7 @@ public class CreateCustomerHandler(IUnitOfWork unitOfWork,
         {
             Id = customer.Id,
             Name = customer.Name,
-            Email = customer.Email,
+            Email = customer.Email.Address,
             Phone = customer.Phone
         });
 

@@ -12,7 +12,10 @@ public class CustomerMap : EntityMap<Customer>
 
         builder.HasKey(_ => _.Id);
         builder.Property(_ => _.Name).IsRequired().HasMaxLength(120).IsUnicode(false);
-        builder.Property(_ => _.Email).IsRequired().HasMaxLength(255).IsUnicode(false);
+        builder.OwnsOne(p => p.Email, email =>
+        {
+            email.Property(e => e.Address).HasColumnName("Email").HasMaxLength(255).IsRequired().IsUnicode(false);
+        });        
         builder.Property(_ => _.Phone).IsRequired().HasMaxLength(30).IsUnicode(false);
 
         builder.HasMany(e => e.Orders)

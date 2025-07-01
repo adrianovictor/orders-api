@@ -1,58 +1,53 @@
 using OrdersService.Domain.Core;
 using OrdersService.Domain.Exceptions;
+using OrdersService.Domain.ValueObjects;
 
 namespace OrdersService.Domain.Entities;
 
 public class Customer : Entity<Customer>
 {
     public string Name { get; protected set; }
-    public string Email { get; protected set; }
+    public Email Email { get; protected set; }
     public string Phone { get; protected set; }
     public virtual ICollection<Order> Orders{ get; protected set; } = [];
 
     protected Customer() { }
 
-    public Customer(string name, string email, string phone)
+    public Customer(string name, Email email, string phone)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new DomainException($"Customer {nameof(name)} cannot be empty.");
-
-        if (string.IsNullOrWhiteSpace(email))
-            throw new DomainException($"Customer {nameof(email)} cannot be empty.");
-            
-        if (string.IsNullOrWhiteSpace(phone))
-            throw new DomainException($"Customer {nameof(phone)} cannot be empty.");
+        name.ThrowIfNullOrWhiteSpace(nameof(name), "O nome não pode ser vazio.");
+        email.ThrowIfNull(nameof(email), "Email não pode ser nulo.");
+        phone.ThrowIfNullOrWhiteSpace(nameof(phone), "O telefone não pode ser vazio.");
 
         Name = name;
         Email = email;
         Phone = phone;
     }
 
-    public static Customer Create(string name, string email, string phone)
+    public static Customer Create(string name, Email email, string phone)
     {
         return new(name, email, phone);
     }
 
     public void ChangeName(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new DomainException($"Customer {nameof(name)} cannot be empty.");
+        name.ThrowIfNullOrWhiteSpace(nameof(name), "O nome não pode ser vazio.");
 
         Name = name;
     }
 
-    public void ChangeEmail(string email)
+    public void ChangeEmail(Email email)
     {
-        if (string.IsNullOrWhiteSpace(email))
-            throw new DomainException($"Customer {nameof(email)} cannot be empty.");
+        email.ThrowIfNull(nameof(email), "Email não pode ser nulo.");
+
+        Email = email;
 
         Email = email;
     }
 
     public void ChangePhone(string phone)
     {
-        if (string.IsNullOrWhiteSpace(phone))
-            throw new DomainException($"Customer {nameof(phone)} cannot be empty.");
+        phone.ThrowIfNullOrWhiteSpace(nameof(phone), "O telefone não pode ser vazio.");
 
         Phone = phone;
     }
