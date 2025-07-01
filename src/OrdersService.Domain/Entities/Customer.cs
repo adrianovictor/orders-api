@@ -15,13 +15,13 @@ public class Customer : Entity<Customer>
     public Customer(string name, string email, string phone)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new DomainException("Customer name cannot be empty.");
+            throw new DomainException($"Customer {nameof(name)} cannot be empty.");
 
         if (string.IsNullOrWhiteSpace(email))
-            throw new DomainException("Customer nome cannot be empty.");
+            throw new DomainException($"Customer {nameof(email)} cannot be empty.");
             
         if (string.IsNullOrWhiteSpace(phone))
-            throw new DomainException("Customer phone cannot be empty.");
+            throw new DomainException($"Customer {nameof(phone)} cannot be empty.");
 
         Name = name;
         Email = email;
@@ -36,23 +36,23 @@ public class Customer : Entity<Customer>
     public void ChangeName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new DomainException("Customer name cannot be empty.");
+            throw new DomainException($"Customer {nameof(name)} cannot be empty.");
 
         Name = name;
     }
 
-    public void ChageEmail(string email)
+    public void ChangeEmail(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
-            throw new DomainException("Customer email cannot be empty.");
+            throw new DomainException($"Customer {nameof(email)} cannot be empty.");
 
         Email = email;
     }
 
-    public void ChanagePhone(string phone)
+    public void ChangePhone(string phone)
     {
         if (string.IsNullOrWhiteSpace(phone))
-            throw new DomainException("Customer phone cannot be empty.");
+            throw new DomainException($"Customer {nameof(phone)} cannot be empty.");
 
         Phone = phone;
     }
