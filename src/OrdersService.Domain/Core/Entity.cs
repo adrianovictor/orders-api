@@ -24,6 +24,10 @@ public abstract class Entity<TEntity> : IEntity<TEntity> where TEntity : class
         if (obj is not Entity<TEntity> other)
             return false;
 
+        // Se ambas são transientes, comparar por valores relevantes (exemplo: e-mail no caso de Customer)
+        if (IsTransient() && other.IsTransient())
+            return ReferenceEquals(this, other);
+
         return Id == other.Id;
-    }    
+    }   
 }
