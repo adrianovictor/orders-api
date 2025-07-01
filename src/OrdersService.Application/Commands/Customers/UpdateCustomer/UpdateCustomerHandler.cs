@@ -3,7 +3,6 @@ using OrdersService.Domain.Interfaces.Repository.Reading;
 using OrdersService.Domain.Interfaces.Repository.Writing;
 using OrdersService.Domain.Interfaces.UoW;
 using OrdersService.Domain.Models;
-using OrdersService.Domain.ValueObjects;
 
 namespace OrdersService.Application.Commands.Customers.UpdateCustomer;
 

@@ -1,6 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+using System.Net.Mail;
 using OrdersService.Domain.Core;
 using OrdersService.Domain.Exceptions;
-using OrdersService.Domain.Validators;
 
 namespace OrdersService.Domain.Entities;
 
@@ -9,7 +10,7 @@ public class Customer : Entity<Customer>
     public string Name { get; protected set; }
     public string Email { get; protected set; }
     public string Phone { get; protected set; }
-    public virtual ICollection<Order> Orders{ get; protected set; } = [];
+    public virtual ICollection<Order> Orders { get; protected set; } = [];
 
     protected Customer() { }
 
@@ -17,10 +18,10 @@ public class Customer : Entity<Customer>
     {
         name.ThrowIfNullOrWhiteSpace(nameof(name), "O nome não pode ser vazio.");
         email.ThrowIfNullOrWhiteSpace(nameof(email), "O endereço de e-mail não pode ser vazio.");
-        if (!EmailValidator.Validate(email))
+        if (!ValidateEmail(email))
         {
-            throw new ArgumentException("O endereço de e-mail fornecido não é válido.", nameof(email));
-        }        
+            throw new DomainException("O endereço de e-mail fornecido não é válido.");
+        }
         phone.ThrowIfNullOrWhiteSpace(nameof(phone), "O telefone não pode ser vazio.");
 
         Name = name;
@@ -43,10 +44,10 @@ public class Customer : Entity<Customer>
     public void ChangeEmail(string email)
     {
         email.ThrowIfNullOrWhiteSpace(nameof(email), "O endereço de e-mail não pode ser vazio.");
-        if (!EmailValidator.Validate(email))
+        if (!ValidateEmail(email))
         {
-            throw new ArgumentException("O endereço de e-mail fornecido não é válido.", nameof(email));
-        } 
+            throw new DomainException("O endereço de e-mail fornecido não é válido.");
+        }
 
         Email = email;
     }
@@ -56,5 +57,11 @@ public class Customer : Entity<Customer>
         phone.ThrowIfNullOrWhiteSpace(nameof(phone), "O telefone não pode ser vazio.");
 
         Phone = phone;
+    }
+
+    private bool ValidateEmail(string email)
+    {
+        var emailValidator = new EmailAddressAttribute();
+        return emailValidator.IsValid(email);
     }
 }
