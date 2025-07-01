@@ -6,15 +6,15 @@ namespace OrdersService.Domain.Entities;
 
 public class Customer : Entity<Customer>
 {
-    [Required(ErrorMessage = "O nome não pode ser vazio.")]
-    [StringLength(100, MinimumLength = 2, ErrorMessage = "O nome deve ter entre 2 e 100 caracteres.")]
+    [Required(ErrorMessage = "O campo 'Nome' não pode ser vazio.")]
+    [StringLength(100, MinimumLength = 2, ErrorMessage = "O campo 'Nome' deve ter entre 2 e 100 caracteres.")]
     public string Name { get; protected set; }
 
-    [Required(ErrorMessage = "O endereço de e-mail não pode ser vazio.")]
+    [Required(ErrorMessage = "O campo 'E-mail' não pode ser vazio.")]
     [EmailAddress(ErrorMessage = "O endereço de e-mail fornecido não é válido.")]
     public string Email { get; protected set; }
 
-    [Required(ErrorMessage = "O telefone não pode ser vazio.")]
+    [Required(ErrorMessage = "O campo 'Telefone' não pode ser vazio.")]
     [Phone(ErrorMessage = "O telefone fornecido não é válido.")]
     public string Phone { get; protected set; }
 
@@ -65,8 +65,17 @@ public class Customer : Entity<Customer>
 
         if (!Validator.TryValidateObject(this, validationContext, validationResults, true))
         {
-            var errors = validationResults.Select(r => r.ErrorMessage).ToList();
-            throw new DomainException("Erro de validação: " + string.Join(" | ", errors));
+            var errors = new Dictionary<string, string>();
+
+            foreach (var result in validationResults)
+            {
+                var fieldName = result.MemberNames.FirstOrDefault() ?? "Desconhecido";
+                if (!errors.ContainsKey(fieldName))
+                    errors.Add(fieldName, result.ErrorMessage ?? "Erro de validação desconhecido");
+            }
+
+            throw new DomainValidationException(errors);
         }
     }
+
 }
