@@ -24,7 +24,7 @@ public class UpdateCustomerHandler(IUnitOfWork unitOfWork,
 
         customerWrite.ChangeName(request.CustomerName);
         customerWrite.ChangeEmail(request.CustomerEmail);
-        customerWrite.ChanagePhone(request.CustomerPhone);
+        customerWrite.ChangePhone(request.CustomerPhone);
 
         _customerWriteRepository.Update(customerWrite);
         await _unitOfWork.CommitAsync();
